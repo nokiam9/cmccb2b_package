@@ -1,0 +1,9 @@
+# /bin/bash
+
+# export table
+mongoexport -d cmccb2b -c Cmccb2bItem -o Cmccb2bItem.json
+gzip Cmccb2bItem.json
+
+#import table
+gzip -d Cmccb2bItem.json.gz
+mongoimport -d cmccb2b -c Cmccb2bItem --drop < Cmccb2bItem.json
