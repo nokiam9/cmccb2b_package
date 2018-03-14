@@ -10,10 +10,11 @@ services:
       - backend_net
     expose:
       - 27017
-    # open public 'ports' for develop, when deploying it should delete!!!
+    # Notice: bind all IP for develop locally, when deploying it should be deleted!!!
     ports:
       - "27017:27017"
 
+    # Notice: check this user_date volume
     volumes:
       - ../user_data/db:/data/db
 

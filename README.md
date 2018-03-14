@@ -21,3 +21,4 @@
 ### 注意事项 ###
 - GitHub上传不含`user_date/`目录，需要手工设置volume目录，或者手工迁移数据
 - 由于GitHub上已经用过cmccb2b的name，因此改名为cmccb2b_package
+- ECS生产环境docker版本低，version＝2

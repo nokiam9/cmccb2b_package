@@ -16,6 +16,7 @@ services:
     ports:
       - "6800:6800"
 
+    # Notice: check this user_date volume
     volumes:
       - ./user_data/logs:/app/logs
 
