@@ -8,10 +8,10 @@
 5. 浏览器远程访问<www.caogo.cn>  或者 <a href="http://47.52.226.119">47.52.226.119</a>  
 
 ### 文件清单 ###
-- `scrapy/`：后台爬虫应用，其中`app_?_?/`存放app各个版本(version: major+minor)
-- `falsk/`：前台web应用，其中`app_?_?/`存放app各个版本 
+- `scrapy/`：后台scrapy应用，运行环境集成了scrapyd和scrapy_client，其中`app_?_?/`存放app各个版本(version: major+minor)
+- `falsk/`：前台flask应用，运行环境集成了uWSGI和nginx，其中`app_?_?/`存放app各个版本 
 - `mongo/`：公共数据库应用
-- `crontab/`：后台定时任务调度，为scrapy提供服务
+- `crontab/`：后台定时任务调度，为scrapy提供服务，运行环境集成了docker for docker
 - `utils/`:系统维护的一些脚本，包括数据库迁移、数据检查等...
 - `user_data`:<font color="orange">用户数据，包括db、logs等，注意VCS和GitHub不包含该目录。</font>
 - `prestart.sh`: 预启动程序，负责设置network并启动mongo，*注意：在启动docker-compose前，必须运行该程序*
