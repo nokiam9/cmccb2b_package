@@ -22,3 +22,4 @@
 - GitHub上传不含`user_date/`目录，需要手工设置yml文件中的volume
 - 由于GitHub上已经用过cmccb2b的name，因此改名为cmccb2b_package
 - ECS生产环境docker版本低，version＝2
+- 考虑scrapy:6800关闭外网访问，取消首页链接

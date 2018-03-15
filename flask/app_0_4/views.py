@@ -11,7 +11,15 @@ def index():
 
 def pageview():
     page_num = request.args.get('page_id', default=1, type=int)
-    todos_page = Todo.objects.paginate(page=page_num, per_page=10)
+    # pipeline = [{
+    #     '$sort': {
+    #         'published_date': -1,
+    #         'crawled_time': -1
+    #     }
+    # }]
+    # cursor = Todo.objects.aggregate(*pipeline, allowDiskUse=True)
+    # todos_page = cursor.paginate(page=page_num, per_page=10)  ＃ error！
+    todos_page = Todo.objects.order_by("-published_date", "-crawled_time").paginate(page=page_num, per_page=10)
     return render_template('pagination.html', todos_page=todos_page)
 
 

@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   scrapy:
@@ -13,6 +13,8 @@ services:
 
     networks:
       - backend_net
+    expose:
+      - 6800
     ports:
       - "6800:6800"
 
@@ -32,6 +34,8 @@ services:
 
     networks:
       - frontend_net
+    expose:
+      - 80
     ports:
       - "80:80"
     environment:
