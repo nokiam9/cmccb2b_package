@@ -1,0 +1,59 @@
+{# Macro for creating navigation links #}
+{% macro render_navigation(pagination) %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        {% for page in pagination.iter_pages() %}
+        <!--pagination.iter_pages()返回当前的可用页面列表，而不是全部pages，-->
+        <!--    默认参数: left_edge=2, left_current=2, right_current=5, right_edge=2 -->
+        {% if page %}
+        <!--如果不是当前页，正常显示链接，否则显示数字但链接不可用，，而如果页面列表的当前值为None，则显示... -->
+        {% if page != pagination.page %}
+        <li class="page-item"><a class="page-link" onclick="selectPage('{{ type_id }}', {{page}})">{{page}}</a></li>
+        {% else %}
+        <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+        {% endif %}
+        {% else %}
+        <li class="page-item disabled"><a class="page-link">......</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endmacro %}
+
+{% block body %}
+<div class="table-sm ">
+    <h3 class="text-primary">{{title}} 列表</h3>
+    <table class="table table-hover text-center text-nowrap table-bordered">
+        <thead class="thead-default">
+        <tr>
+            <th class="text-center ">项目名称</th>
+            <th class="text-center ">公告类型</th>
+            <th class="text-center ">招标单位</th>
+            <th class="text-center ">发布日期</th>
+            <th class="text-center ">爬取时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for todo in todos_page.items %}
+        {% if todo.reminded_time is none %}
+        <tr onclick="selectContent('{{todo.nid}}')" class="text-info small">
+            {% else %}
+        <tr onclick="selectContent('{{todo.nid}}')" class="small">
+            {% endif %}
+            <td>{{todo.title}}</td>
+            <td>{{todo.notice_type}}</td>
+            <td>{{todo.source_ch}}</td>
+            <td>{{todo.published_date.strftime('%Y-%m-%d')}}</td>
+            <td>{{todo.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="navigation">
+    <h6 class="border-left small text-muted"> 总记录数: {{todos_page.total}}</h6>
+    {{ render_navigation(todos_page) }}
+</div>
+
+{% endblock %}

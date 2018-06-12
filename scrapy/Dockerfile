@@ -1,22 +1,20 @@
-FROM python:2.7
+FROM python:3.6
 LABEL MAINTAINER="sj0225@icloud.com"
 
-ARG AppMajorVersion
-ARG AppMinorVersion
-
-RUN pip install scrapy==1.5.0 \
-    scrapyd==1.2.0 \
-    scrapyd-client==1.1.0 \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple
-ADD scrapyd.conf /etc/scrapyd/scrapyd.conf
-
-RUN mkdir /app
-COPY ./app_${AppMajorVersion}_${AppMinorVersion} /app/
-
-EXPOSE 6800
-VOLUME /app/logs
-
-WORKDIR /app
+# 安装基础依赖软件，
+COPY ./requirements.txt /
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
+# 配置scrapyd
+ADD scrapyd.conf /etc/scrapyd/scrapyd.conf
+
+# 传入app应用文件，注意：src不含/，否则会丢失目录结构
+RUN mkdir /app
+COPY ./app /app/
+
+EXPOSE 6800
+#VOLUME /app/logs
+
+# 必须在scrapy.cfg所在的目录启动scrapyd！！！
+WORKDIR /app
 ENTRYPOINT ["/usr/local/bin/scrapyd"]

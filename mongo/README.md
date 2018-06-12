@@ -1,8 +1,8 @@
-## MongoAP ##
+## Mongo Docker ##
 
 主要功能：以container方式启动mongo 3.6，并提供27017端口访问  
-加载方式: `docker-compose up -d`  
-卸载方式: `docker-compose down`
+加载方式: `sh prestart.sh` ，其中加载了`mongo.yml` ，本地开发环境还加载了 `mongo.override.yml`  
+卸载方式: 不需要，或者手工执行`docker stop mongo`
 
 ### 参考文档 ###
 - [Mongo Shell](https://docs.mongodb.com/manual/mongo/)
@@ -31,7 +31,7 @@ mongoimport -d cmccb2b -c Cmccb2bItem --drop < Cmccb2bItem.json
 # 进入mongo容器
 docker exec -it mongo /bin/bash
 # 在容器内调用mongo客户端，并启动脚本文件
-mongo < group_by_crawled_time.js
+mongo < group_by_timestamp.js
 ```
 
 

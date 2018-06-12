@@ -1,43 +1,47 @@
 version: '2'
 
 services:
+  nginx:
+    build:
+      context: nginx/
+    image: cmccb2b/nginx
+    container_name: nginx
+    restart: always
+
+    networks:
+      - cmccb2b_net
+    ports:
+      - "80:80"
+      - "6800:6800"
+      - "9000:9000"
+      - "443:443"
+
   scrapy:
     build:
       context: scrapy/
-      args:
-        AppMajorVersion: "3"
-        AppMinorVersion: "0"
-    image: cmccb2b/scrapy:3.0
+    image: cmccb2b/scrapy
     container_name: scrapy
     restart: always
 
     networks:
-      - backend_net
-    expose:
-      - 6800
-    ports:
-      - "6800:6800"
+      - cmccb2b_net
 
-    # Notice: check this user_date volume
     volumes:
-      - ./user_data/logs:/app/logs
+      - download_volume:/download
 
   flask:
     build:
       context: flask/
-      args:
-        AppMajorVersion: "0"
-        AppMinorVersion: "4"
-    image: cmccb2b/flask:0.4
+    image: cmccb2b/flask
     container_name: flask
     restart: always
 
     networks:
-      - frontend_net
-    expose:
-      - 80
-    ports:
-      - "80:80"
+      - cmccb2b_net
+
+    volumes:
+      - download_volume:/download
+
     environment:
       - FLASK_APP=app/main.py
       - FLASK_DEBUG=1
@@ -46,21 +50,46 @@ services:
   crontab:
     build:
       context: crontab/
-    image: cmccb2b/crontab:1.1
+    image: cmccb2b/crontab
     container_name: crontab
     restart: always
-    depends_on:
-      - flask
 
     networks:
-      - backend_net
+      - cmccb2b_net
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./crontab/config/config.json:/opt/crontab/config.json:rw
+
+  xunsearch-server:
+    build:
+      context: xunsearch/
+      dockerfile: xunsearch-server.dockerfile
+    image: cmccb2b/xunsearch-server
+    container_name: xunsearch-server
+    restart: always
+
+    networks:
+      - cmccb2b_net
+
+    volumes:
+      - ../data/xunsearch:/usr/local/xunsearch/data
+
+  xunsearch:
+    build:
+      context: xunsearch/
+      dockerfile: xunsearch.dockerfile
+    image: cmccb2b/xunsearch
+    container_name: xunsearch
+    restart: always
+
+    networks:
+      - cmccb2b_net
+
 
 networks:
-  frontend_net:
+  cmccb2b_net:
     external: true
-  backend_net:
-    external: true
+
+
+volumes:
+  download_volume:      # Public volume for Scrapy & Flask where store downloaded files & images
